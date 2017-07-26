@@ -12,6 +12,8 @@ The API allows for automated Torrent Downloads and File Management, so this is w
 
 ## How do I use it?
 
-You just copy the `Premiumize.class.php` into your project folder, add your Customer ID and PIN, and finally, `require "Premiumize.class.php";`.
+You just copy the `Premiumize.class.php` into your project folder, add your Customer ID and PIN, and finally:
+
+```require "Premiumize.class.php";```
 
 Take a look at [the example](https://github.com/timmyrs/Premiumize-PHP-API/blob/master/Example.php) if you struggle to find the functions based on the code.
