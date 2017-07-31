@@ -22,29 +22,21 @@ abstract class Premiumize
 	 * @param array Arguments
 	 * @return array JSON
 	 */
-	public static function request($endpoint, $rawArgs = [])
+	public static function request($endpoint, $args = [])
 	{
-		$args = [];
-		foreach($rawArgs as $key => $value)
+		$args["customer_id"] = PREMIUMIZE_CUSTOMER_ID;
+		$args["pin"] = PREMIUMIZE_PIN;
+		$json = json_decode(file_get_contents((PREMIUMIZE_USE_HTTPS?"https://www":"http://http").".premiumize.me/api".$endpoint."?".http_build_query($args)), true);
+		if(!$json || $json["status"] != "success")
 		{
-			if(gettype($value) == "array")
+			if($json && isset($json["message"]))
 			{
-				foreach($value as $val)
-				{
-					array_push($args, $key."[]=".rawurlencode($val));
-				}
+				throw new Exception("Request was unsuccessful: ".$json["message"]);
 			}
 			else
 			{
-				array_push($args, $key."=".rawurlencode($value));
+				throw new Exception("Request was unsuccessful.");
 			}
-		}
-		array_push($args, "customer_id=".PREMIUMIZE_CUSTOMER_ID);
-		array_push($args, "pin=".PREMIUMIZE_PIN);
-		$json = json_decode(file_get_contents((PREMIUMIZE_USE_HTTPS?"https://www":"http://http").".premiumize.me/api".$endpoint."?".join("&",$args)), true);
-		if($json["status"] != "success")
-		{
-			throw new Exception("Request was unsuccessful: ".json_encode($json, JSON_PRETTY_PRINT));
 		}
 		return $json;
 	}
